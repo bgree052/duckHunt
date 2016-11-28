@@ -12,21 +12,13 @@ var Duck = {
 }
 
 
-
-
-//Crosshair
-
-var colour = 0;
-
-//var reset;
-
-var gunShot;
-
-var colourChanger;
-
-var counter = 0;
-
-var temp = 0;
+var Crosshair = {
+  colour: 0,
+  colourChanger:0,
+  counter: 0,
+  temp: 0,
+  sound: ("assets/gunshot.wav")
+}
 
 var Dead = 0;
 
@@ -40,6 +32,10 @@ var duckFlying = ["assets/duckFlapUp.png","assets/duckFlapDown.png"];
 
 var DuckCount = 0;
 
+var i;
+
+var reset;
+
 
 function preload(){
   flapUp = loadImage(duckFlying[0]);
@@ -47,7 +43,9 @@ function preload(){
   theDuck = loadImage("assets/duck.png");
   stage = loadImage("assets/stage.png");
   nothing = loadImage("assets/Untitled.png")
-  gunShot = loadSound("assets/gunshot.wav");
+  gunShot = loadSound(Crosshair.sound);
+  stageMusic = loadSound("assets/Background Music.mp3");
+  quack = loadSound("assets/quack1.wav")
 }
 
 
@@ -55,45 +53,72 @@ function setup() {
   createCanvas(stage.width,stage.height);
   Duck.Xstart = 100;
   Duck.Ystart = 150;
+  stageMusic.setVolume(0.5);
+  stageMusic.play();
 }  
 
 function draw() {
   //stage drawn
+  reset = 5-theDuck.width;
+  //part of respawning by checking if Duck.X has reset to the left, and adds 1 to the offSide int
+  if(Duck.Xstart==reset){
+    offSide +=1;
+    //resets offside value
+    if(Dead-offSide<0){
+      offSide -=1
+    }
+  }
   
   image(stage);
   
-  if(Dead==1 && Duck.Xstart==-136){
-    offSide =1;
+  //checks if the count of Dead (hit detection count) is equal to that of the times the duck has been reset
+  if(Dead==offSide){
     flight=flapUp;
   }
+  
   
   textFont("Calibri");
   textSize(30);
   textStyle(BOLD);
+  fill:(0);
   text("SCORE= " +Dead, 10, 50);
   
     //CROSSHAIR DRAWN
   drawCrosshair();
 
   
-  counter = counter + temp;
+  Crosshair.counter = Crosshair.counter + Crosshair.temp;
   
-  if(DuckCount == 10){
-    DuckCount = 0
-    }
+   if(DuckCount == 15){
+     stageSetting = 3;
+     }
     
   //Move Duck1 back to start
-   if(Duck.Xstart > stage.width){
+   if(Duck.Xstart > stage.width || Dead-offSide==1){
     DuckCount += 1;
     Duck.Xstart = 0-theDuck.width;
     
-    if(DuckCount == 1){
-    Duck.Ystart = 300
+    if(i==1){
+      Duck.Ystart = 300
     }
-    if(DuckCount ==2){
-    Duck.Ystart = 50
+    if(i==2){
+      Duck.Ystart = 75
+    }
+    if(i==3){
+      Duck.Ystart = 50
+    }
+    if(i==4){
+      Duck.Ystart = 25
+    }
+    if(i==5){
+      Duck.Ystart = 200
+    }
+    if(i==6){
+      Duck.Ystart = 120
     }
   }
+  
+  
   
 
 //Duck Flapping
@@ -110,7 +135,9 @@ function draw() {
     flight=flapUp
   }
 
-if(Dead>0 && offSide<1){
+
+//Remove Duck
+if(Dead-offSide==1){
   flight=nothing;
 }
 
@@ -123,17 +150,17 @@ if(Dead>0 && offSide<1){
 //HIT DETECTION
   
   //this is the logger for the mouse being pressed, and sets the colour value to red and the timer addition value to 1 so it incremints by 1
-  if(colourChanger == 1){
-    colour = 255;
-    temp = 1;
+  if(Crosshair.colourChanger == 1){
+    Crosshair.colour = 255;
+    Crosshair.temp = 1;
   }
   //when the counter hits 60 the counting stops as temp becomes 0 and the counter is reset to 0, 
   //and the colour becomes black, and the counter value returns to 0
-  if(counter >= 30){
-    temp = 0;
-    counter = 0;
-    colour = 0;
-    colourChanger = 0;
+  if(Crosshair.counter >= 30){
+    Crosshair.temp = 0;
+    Crosshair.counter = 0;
+    Crosshair.colour = 0;
+    Crosshair.colourChanger = 0;
   }
   
   //Calculates the end position of the duck relative to the start position
@@ -150,18 +177,22 @@ if(Dead>0 && offSide<1){
 
 
 
-console.log("MoveX=" +Duck.Xstart);
-//console.log("Xend=" +Duck.Xend);
-//console.log("Yend=" +Duck.Yend);
+//console.log("Duck.Xstart= " +Duck.Xstart);
+//console.log("Xend= " +Duck.Xend);
+//console.log("Yend= " +Duck.Yend);
 //console.log("MoveY= " +Duck.Ystart);
-console.log("Speed=" +Duck.speed);
-//console.log("Counter= " +counter);
-//console.log("Temp= " +temp);
-//console.log(mouseX);
-
-//reset = 5-theDuck.width;
+//console.log("Speed= " +Duck.speed);
+//console.log("Counter= " +Crosshair.counter);
+//console.log("Temp= " +Crosshair.temp);
+//console.log("MouseX= "+mouseX);
+//console.log("Dead= "+Dead);
+//console.log("XoffSide= "+offSide);
 
 //console.log("START POINT= " +reset);
+//It's -136 when speed= 5
+
+//console.log("i= "+i);
+
 
 }
 //END OF DRAW
@@ -173,9 +204,9 @@ console.log("Speed=" +Duck.speed);
 
   function drawCrosshair(){  
     noFill();
-    stroke(colour, 0, 0);
+    stroke(Crosshair.colour, 0, 0);
     ellipse(mouseX, mouseY, 40, 40);
-    fill(colour, 0, 0);
+    fill(Crosshair.colour, 0, 0);
     ellipse(mouseX, mouseY, 5, 5);
     line(mouseX-30, mouseY, mouseX+30, mouseY);
     line(mouseX, mouseY+30, mouseX, mouseY-30);
@@ -192,12 +223,15 @@ function drawDuck(img, x, y, spd) {
 function mousePressed() {
   gunShot.setVolume(1);
   gunShot.play();
-  colourChanger = 1;
-  console.log("colourChanger=" +colourChanger);
+  Crosshair.colourChanger = 1;
+  //console.log("colourChanger=" +Crosshair.colourChanger);
   
     if(mouseX<Duck.Xend && mouseX>Duck.Xstart && mouseY<Duck.Yend && mouseY>Duck.Ystart){
       Dead += 1;
-      console.log("Dead=" +Dead);
+      quack.setVolume(1.5);
+      quack.play();
+      //console.log("Dead=" +Dead);
+      i = floor(random(1,6));
     }
   }
   
