@@ -80,7 +80,7 @@ function draw() {
   textFont("Calibri");
   textSize(30);
   textStyle(BOLD);
-  fill:(0);
+  fill(0);
   text("SCORE= " +Dead, 10, 50);
   
     //CROSSHAIR DRAWN
