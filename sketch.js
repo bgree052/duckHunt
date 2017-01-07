@@ -24,10 +24,10 @@ var Crosshair = {
   var ReplayButton={
     Xstart : 475,
     Ystart : 334.5,
-    
+
     Width : 300,
     Height : 100,
-    
+
     Xend : 775,
     Yend : 434.5
   }
@@ -99,28 +99,28 @@ function setup() {
 }
 
 function draw() {
-  
+
   testCounter += 0.01666666666;
-  
+
   //console.log(testCounter);
-  
+
   if (stageSetting ==1 && mouseIsPressed){
     stageSetting = 2;
   }
-  
+
   //timer
    if(testCounter >= 60){
      stageSetting = 3;
      stageMusic.stop();
      }
-  
+
   //ends game
   if(stageSetting == 3){
     image(stage);
-    
+
     fill(0, 0, 255);
     rect(ReplayButton.Xstart, ReplayButton.Ystart, ReplayButton.Width, ReplayButton.Height);
-    
+
   textFont("Calibri");
   textSize(80);
   textStyle(BOLD);
@@ -133,11 +133,11 @@ function draw() {
   fill(255);
   text("Play Again?", stage.width/3 +75, stage.height/2 +15);
   }
-  
+
   //start screen
   if (stageSetting == 1){
     image(stage);
-    
+
   textFont("Calibri");
   textSize(80);
   textStyle(BOLD);
@@ -148,14 +148,14 @@ function draw() {
   textSize(40);
   textStyle(NORMAL);
   text("YOU HAVE ONE MINUTES TO SHOOT AS MANY AS YOU CAN", stage.width/4-120, stage.height/2);
-  
+
   }
-  
+
   if (stageSetting == 2){
-    
-    
-  
-  
+
+
+
+
   reset = Duck.speed-theDuck.width;
   //part of respawning by checking if Duck.X has reset to the left, and adds 1 to the offSide int
   if(Duck.Xstart==reset){
@@ -168,7 +168,7 @@ function draw() {
 
   image(stage);
   //stage drawn
-  
+
   //checks if the count of ducksShot (hit detection count) is equal to that of the times the duck has been reset
   if(ducksShot==offSide){
     duckSprite=flapUp;
@@ -179,7 +179,9 @@ function draw() {
   textSize(30);
   textStyle(BOLD);
   fill(0);
+
   text("SCORE= " +ducksShot, 10, 50);
+
 
     //CROSSHAIR DRAWN
   drawCrosshair();
@@ -241,7 +243,7 @@ if(ducksShot-offSide==1){
 
   //Load Duck1 and move
   drawDuck(duckSprite, Duck.Xstart, Duck.Ystart, Duck.speed);
-  
+
   Duck.Xstart += Duck.speed;
 
 
@@ -297,16 +299,16 @@ if(ducksShot-offSide==1){
 
 
 
-    
+
 
   //here the sound is played, the colour changer is started, and hit detection is defined
   function mousePressed() {
-    
+
     gunShot.setVolume(1);
     gunShot.play();
     Crosshair.colourChanger = 1;
     //console.log("colourChanger=" +Crosshair.colourChanger);
-  
+
       if(stageSetting == 2 && mouseX<Duck.Xend && mouseX>Duck.Xstart && mouseY<Duck.Yend && mouseY>Duck.Ystart){
         ducksShot += 1;
         quack.setVolume(1.5);
@@ -316,9 +318,9 @@ if(ducksShot-offSide==1){
         Duck.speed = floor(random(6,9));
         //console.log(i);
       }
-      
-      
-      
+
+
+
       if(stageSetting == 3 && mouseX<ReplayButton.Xend && mouseX>ReplayButton.Xstart && mouseY<ReplayButton.Yend && mouseY>ReplayButton.Ystart){
         testCounter = 0;
         stageMusic.play();
@@ -329,6 +331,5 @@ if(ducksShot-offSide==1){
         Duck.Xstart = 100;
         Duck.Ystart = 150;
       }
-      
+
     }
-  
